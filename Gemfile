@@ -12,8 +12,11 @@ gem 'puma', '~> 4.1'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
+gem 'bcrypt', '~> 3.1.7'
+# Use JWT token
+gem 'jwt'
+# Use simple_command, A standardized way to build and use Service Objects
+gem 'simple_command'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
