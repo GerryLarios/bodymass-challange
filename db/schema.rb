@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_11_224616) do
+ActiveRecord::Schema.define(version: 2020_02_12_164734) do
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.float "min"
+    t.float "max"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
@@ -20,6 +28,9 @@ ActiveRecord::Schema.define(version: 2020_02_11_224616) do
     t.float "weight"
     t.float "height"
     t.float "bmi"
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_users_on_category_id"
   end
 
+  add_foreign_key "users", "categories"
 end

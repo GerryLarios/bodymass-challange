@@ -1,15 +1,16 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :calculate_bmi, :category]
   skip_before_action :authenticate_request, only: [:create]
+  
   # GET /users
   def index
-    @users = User.all
-    json_response(@users)
+    #@users = User.all
+    json_response(@current_user)
   end
   
   # GET /users/:id
   def show
-    json_response(@todo)
+    json_response(@user)
   end
 
   # POST /users
@@ -21,21 +22,27 @@ class UsersController < ApplicationController
   # PUT /users/:id
   def update
     @user.update(user_params)
-    head :no_content
+    json_response(@user)
   end
-
+  
+  # DELETE /users/:id
   def destroy
     @user.destroy
     head :no_content
   end
 
+  # get /users/:id/category
+  def category
+    json_response(@user.category)
+  end
+
   private
   
   def user_params
-    params.permit(:email, :password)
+    params.permit(:email, :password, :weight, :height)
   end
 
   def set_user
-    @user = User.find(params[:id])
+    @user = @current_user
   end  
 end
