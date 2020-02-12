@@ -16,7 +16,7 @@ class AuthenticateUser
   
   def user
     user = User.find_by_email email
-    user && user.authenticate(password ) ? user : add_err
+    user && user.authenticate(password) ? user : add_err
   end
 
   def add_err
