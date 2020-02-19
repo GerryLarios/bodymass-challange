@@ -1,9 +1,11 @@
 class User < ApplicationRecord
-  validates_presence_of :email
   has_secure_password
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   belongs_to :category, optional: true
-  before_update :calculate_bmi
+  validates_presence_of :email
+  validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates_numericality_of :height, greater_than: 0.0, less_than: 5.0, on: :update
+  validates_numericality_of :weight, greater_than: 0.0, less_than: 500.0, on: :update
+  after_validation :calculate_bmi, on: :update
   
   private
 
