@@ -22,3 +22,4 @@ created = Category.create!([
   { name: "Obese Class VI (Hyper obese)",          min: 60.0, max: 1000 },
 ])
 
+puts 'Categories created!' if created
