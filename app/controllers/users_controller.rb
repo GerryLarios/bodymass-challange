@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
+  include Validation
   before_action :set_user, only: [:show, :update, :destroy, :calculate_bmi, :category]
   skip_before_action :authenticate_request, only: [:create]
   
   # GET /users
   def index
-    #@users = User.all
     json_response(@current_user)
   end
   
@@ -21,8 +21,13 @@ class UsersController < ApplicationController
   
   # PUT /users/:id
   def update
-    @user.update(user_params)
-    json_response(@user)
+    validation = check_params(user_params)
+    if validation[:success]
+      @user.update(user_params)
+      json_response(@user)
+    else
+      json_response({ error: validation[:message] }, :unprocessable_entity)
+    end
   end
   
   # DELETE /users/:id
@@ -39,7 +44,7 @@ class UsersController < ApplicationController
   private
   
   def user_params
-    params.permit(:email, :password, :weight, :height)
+    params.require(:user).permit(:email, :password, :weight, :height)
   end
 
   def set_user
