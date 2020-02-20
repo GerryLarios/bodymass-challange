@@ -5,12 +5,12 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates_numericality_of :height, greater_than: 0.0, less_than: 5.0, on: :update
   validates_numericality_of :weight, greater_than: 0.0, less_than: 500.0, on: :update
-  after_validation :calculate_bmi, on: :update
+  before_update :calculate_bmi
   
   private
 
   def calculate_bmi
-    self.bmi = self.weight / (self.height) ** 2
+    self.bmi = self.weight / (self.height ** 2)
     self.category_id = get_category_id 
   end
 
