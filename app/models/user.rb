@@ -5,8 +5,8 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates_numericality_of :height, greater_than: 0.0, less_than: 5.0, on: :update
   validates_numericality_of :weight, greater_than: 0.0, less_than: 500.0, on: :update
-  before_update :calculate_bmi
-  
+  after_validation :calculate_bmi, on: :update
+
   private
 
   def calculate_bmi
