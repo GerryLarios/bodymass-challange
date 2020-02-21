@@ -4,23 +4,28 @@ class AuthenticateUser
   def initialize(email, password)
     @email = email
     @password = password
+    @user = find_user
   end
 
   def call
-    JsonWebToken.encode(user_id: user.id) if user
+    @user ? encode : add_err 
   end
 
   private 
   
-  attr_accessor :email, :password
+  def encode
+    auth_user ? JsonWebToken.encode(user_id: @user.id) : add_err 
+  end
   
-  def user
-    user = User.find_by_email email
-    user && user.authenticate(password) ? user : add_err
+  def auth_user
+    @user.authenticate(@password)
+  end
+
+  def find_user
+    User.find_by_email(@email) 
   end
 
   def add_err
     errors.add(:user_authentication, 'invalid credentials')
-    nil
   end
 end
