@@ -5,6 +5,6 @@ class AuthenticationController < ApplicationController
     command = AuthenticateUser.call(params[:email], params[:password])
     command.success? ? 
       json_response({ token: command.result }) : 
-      json_response({ error: command.errors }, :unauthorized)
+      json_response({ error: 'invalid credentials' }, :unauthorized)
   end
 end
