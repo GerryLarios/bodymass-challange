@@ -15,6 +15,6 @@ class User < ApplicationRecord
   end
 
   def get_category_id
-    Category.where("min <= ? AND max >= ?", self.bmi, self.bmi).ids.first
+    Category.where("min <= ? AND max >= ?", bmi, bmi).ids.first
   end
 end
