@@ -1,22 +1,23 @@
 class UsersController < ApplicationController
   include Validation
-  before_action :set_user, only: [:show, :update, :destroy, :calculate_bmi, :category]
+  before_action :set_user, only: [:index, :show, :update, :destroy, :category]
   skip_before_action :authenticate_request, only: [:create]
   
   # GET /users
   def index
-    json_response(@current_user)
+    puts return_user
+    json_response(return_user)
   end
   
   # GET /users/:id
   def show
-    json_response(@user)
+    json_response(return_user)
   end
 
   # POST /users
   def create
     @user = User.create!(user_params)
-    json_response(@user, :created)
+    json_response(return_user, :created)
   end
   
   # PUT /users/:id
@@ -24,7 +25,7 @@ class UsersController < ApplicationController
     validation = check_params(user_params)
     if validation[:success]
       @user.update(user_params)
-      json_response(@user)
+      json_response(return_user)
     else
       json_response({ error: validation[:message] }, :unprocessable_entity)
     end
@@ -49,5 +50,9 @@ class UsersController < ApplicationController
 
   def set_user
     @user = @current_user
-  end  
+  end 
+
+  def return_user
+    @user.attributes.reject { |key, value| key == 'password_digest' }
+  end
 end
