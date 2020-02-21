@@ -3,7 +3,6 @@ class AuthorizeRequest
 
   def initialize(headers = {})
     @auth_token = headers['Authorization']
-    puts @auth_token
   end
 
   def call
