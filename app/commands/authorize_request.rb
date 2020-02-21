@@ -2,36 +2,30 @@ class AuthorizeRequest
   prepend SimpleCommand
 
   def initialize(headers = {})
-    @headers = headers
+    @auth_token = headers['Authorization']
+    puts @auth_token
   end
 
   def call
-    user
+    find_user
   end
 
   private
-  attr_reader :headers
-
-  def user
-    @user ||= find_user if decoded_auth_token
-    @user ||= errors.add(:token, 'Invalid token') && nil
-  end
 
   def find_user
-    user = User.find(decoded_auth_token[:user_id])
+    decoded = decoded_auth_token
+    decoded ? User.find(decoded[:user_id]) : nil
   end
-  
+
   def decoded_auth_token
-    @decoded_auth_token ||= JsonWebToken.decode(http_auth_header)
+    JsonWebToken.decode(http_auth_header)
   end
 
   def http_auth_header
-    head_auth = headers['Authorization']
-    head_auth.present? ? head_auth.split(' ').last : add_err 
+    @auth_token.present? ? @auth_token.split(' ').last : nil 
   end
 
-  def add_err(msg = 'Missing token')
-    errors.add(:token, msg)
-    nil
+  def add_err
+    errors.add(:token, 'Invalid Token')
   end
 end
